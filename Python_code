@@ -1,0 +1,44 @@
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+import sklearn.metrics as metrics
+from sklearn.metrics import classification_report
+
+train_data = pd.read_csv('C:\\Users\\sneha\\Downloads\\train-data.csv')
+test_data = pd.read_csv('C:\\Users\\sneha\\Downloads\\test-data.csv')
+print('Shape of training data :',train_data.shape)
+print('Shape of testing data :',test_data.shape)
+
+for col in train_data.columns:
+    train_data[col] = pd.Categorical(train_data[col])
+    train_data[col] = train_data[col].cat.codes
+train_data.head()
+
+for col in test_data.columns:
+    test_data[col] = pd.Categorical(test_data[col])
+    test_data[col] = test_data[col].cat.codes
+test_data.head()
+
+train_x = train_data.drop(columns=['Label'],axis=1)
+train_y = train_data['Label']
+
+test_x = test_data.drop(columns=['Label'],axis=1)
+test_y = test_data['Label']
+
+model.fit(train_x,train_y)
+
+predict_train = model.predict(train_x)
+print('Target on train data',predict_train) 
+
+accuracy_train = accuracy_score(train_y,predict_train)
+print('accuracy_score on train dataset : ', accuracy_train)
+
+predict_test = model.predict(test_x)
+print('Target on test data',predict_test) 
+
+accuracy_test = accuracy_score(test_y,predict_test)
+print('accuracy_score on test dataset : ', accuracy_test)
+
+test_true_label = test_data['Label'].values
+print("Accuracy: ", metrics.accuracy_score(test_true_label, predict_test))
+print(classification_report(test_true_label, predict_test))
